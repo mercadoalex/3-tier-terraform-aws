@@ -1,47 +1,48 @@
-name: Terraform
+name: Terraform  # Name of the workflow
 
 on:
   push:
     branches:
-      - main
+      - main  # Trigger the workflow on push to the main branch
   pull_request:
     branches:
-      - main
+      - main  # Trigger the workflow on pull request to the main branch
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   terraform:
-    name: 'Terraform'
-    runs-on: ubuntu-latest
+    name: 'Terraform'  # Name of the job
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
     environment: development  # Specify the environment
+
     env:
-      AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}  # Reference the environment variable
+      AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}  # Reference the environment variable for AWS region
 
     steps:
       - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Check out the repository code
 
       - name: 'Setup Terraform'
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v1  # Set up Terraform
         with:
-          terraform_version: 1.0.0
+          terraform_version: 1.0.0  # Specify the Terraform version
 
       - name: 'Debug AWS Region'
-        run: echo "AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }}"
+        run: echo "AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }}"  # Output the AWS region for debugging
 
       - name: 'Configure AWS Credentials'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1  # Configure AWS credentials
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use the AWS access key ID from secrets
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use the AWS secret access key from secrets
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}  # Use the AWS region from the environment variable
 
       - name: 'Terraform Init'
-        run: terraform init
+        run: terraform init  # Initialize Terraform
 
       - name: 'Terraform Plan'
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan  # Create a Terraform plan and output it to a file
 
       - name: 'Terraform Apply'
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve tfplan
+        if: github.ref == 'refs/heads/main'  # Only apply the plan if the branch is main
+        run: terraform apply -auto-approve tfplan  # Apply the Terraform plan automatically
