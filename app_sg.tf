@@ -21,6 +21,6 @@ resource "aws_security_group" "ssh-aws-security-group" {
   }
 
   tags = {
-    Name = "SSH sevurity group"
+    Name = "SSH security group"
   }
 }

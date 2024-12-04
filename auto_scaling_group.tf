@@ -8,13 +8,17 @@ resource "aws_launch_template" "auto-scaling-group" {
   network_interfaces {
     subnet_id       = aws_subnet.public-web-subnet-1.id
     security_groups = [aws_security_group.webserver-security-group.id]
+    associate_public_ip_address = true
+  }
+  tags = {
+    Name = "${var.instance_name_prefix}-asg"
   }
 }
 
 resource "aws_autoscaling_group" "asg-1" {
   availability_zones = ["us-east-1a"]
   desired_capacity   = 1
-  max_size           = 2
+  max_size           = 3
   min_size           = 1
 
   launch_template {

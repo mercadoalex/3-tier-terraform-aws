@@ -12,7 +12,7 @@ variable "file_name" {
 variable "instance_name_prefix" {
   description = "Prefix for the instance name"
   type        = string
-  default     = "frontend"
+  default     = "webserverfrontend"
 }
 variable "instance_count" {
   description = "Number of instances to create"
