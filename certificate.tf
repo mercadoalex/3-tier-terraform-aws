@@ -156,7 +156,7 @@ resource "aws_lb_listener" "https_listener_root" {
 */
 # Create a listener for the load balancer that uses the ACM certificate for the subdomain
 resource "aws_lb_listener" "https_listener_subdomain" {
-  load_balancer_arn = aws_lb.application-load-balancer.arn
+  load_balancer_arn = aws_lb.application-load-balancer2.arn
   port              = "443"
   protocol          = "HTTPS"
 
