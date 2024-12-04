@@ -131,7 +131,7 @@ resource "aws_route53_record" "lb_alias" {
 
   alias {
     name                   = aws_lb.application-load-balancer2.dns_name
-    zone_id                = aws_lb.application-load-balancer.zone_id
+    zone_id                = aws_lb.application-load-balancer2.zone_id
     evaluate_target_health = true
   }
 }
