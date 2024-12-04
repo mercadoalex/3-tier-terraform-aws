@@ -1,6 +1,6 @@
 #### Web app load balancer ######
 
-resource "aws_lb" "application-load-balancer" {
+resource "aws_lb" "application-load-balancer2" {
   name               = "web-external-load-balancer"
   internal           = false
   load_balancer_type = "application"
