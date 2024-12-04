@@ -2,14 +2,23 @@
 variable "key_pair_name" {
   description = "The name of the key pair to use for the EC2 instances"
   type        = string
-  default     = "keypair_default"
+  default     = "unique-keypair-name"
 }
-
-variable "file_name" {
-  description = "Name of the key pair file"
+variable "public_key_file" {
+  description = "Path to the public key file"
   type        = string
-  default     = "keyfile_default"
+  default     = "path/to/your/public-key-file.pub"
 }
+variable "private_key_file" {
+  description = "Path to the private key file"
+  type        = string
+  default     = "path/to/your/private-key-file.pem"
+}
+#variable "file_name" {
+#  description = "Name of the key pair file"
+#  type        = string
+#  default     = "keyfile_default"
+#}
 
 variable "instance_name_prefix" {
   description = "Prefix for the instance name"

@@ -6,6 +6,7 @@ terraform.tfstate.backup
 # Ignore sensitive files
 *.pem
 *.key
+*.pub
 # Ignore local environment settings
 .terraformrc
 terraform.rc

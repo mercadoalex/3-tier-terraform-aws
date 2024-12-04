@@ -26,13 +26,18 @@ resource "tls_private_key" "rsa-4096-alumno04" {
 
 resource "local_file" "tf_key"{
   content =  tls_private_key.rsa-4096-alumno04.private_key_pem
-  filename = var.file_name
+  filename = var.private_key_file
 }
 
 ##### key pair #####
 resource "aws_key_pair" "tf_key" {
+  depends_on = [null_resource.check_key_file]
   key_name   = var.key_pair_name
-  public_key = tls_private_key.rsa-4096-alumno04.public_key_openssh
+  public_key = file(var.public_key_file)
+  #public_key = tls_private_key.rsa-4096-alumno04.public_key_openssh
+    lifecycle {
+      ignore_changes = [key_name]
+    }
 }
 
 
