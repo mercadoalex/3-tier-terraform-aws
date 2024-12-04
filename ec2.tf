@@ -38,7 +38,7 @@ resource "local_file" "public_key" {
 */
 
 ##### Key Pair #####
-resource "aws_key_pair" "tf_key" {
+resource "aws_key_pair" "tf_key2" {
   depends_on = [null_resource.check_key_file]
   key_name   = var.key_pair_name
   public_key = file(var.public_key_file)
