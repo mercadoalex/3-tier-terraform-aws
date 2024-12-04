@@ -45,7 +45,7 @@ resource "aws_lb_target_group_attachment" "web-attachment" {
 
 ##create a listener on port 80 with redirect action 
 resource "aws_lb_listener" "alb_http_listener" {
-  load_balancer_arn = aws_lb.application-load-balancer.arn
+  load_balancer_arn = aws_lb.application-load-balancer2.arn
   port              = 80
   protocol          = "HTTP"
 
