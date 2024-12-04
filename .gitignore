@@ -3,10 +3,6 @@ terraform.tfstate
 terraform.tfstate.backup
 # Ignore plan output files
 *.tfplan
-# Ignore sensitive files
-*.pem
-*.key
-*.pub
 # Ignore local environment settings
 .terraformrc
 terraform.rc

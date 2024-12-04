@@ -2,7 +2,7 @@
 variable "key_pair_name" {
   description = "The name of the key pair to use for the EC2 instances"
   type        = string
-  default     = "unique-keypair-name"
+  default     = "keys/unique-keypair-name"
 }
 variable "public_key_file" {
   description = "Path to the public key file"
