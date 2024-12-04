@@ -1,1 +1,11 @@
 .terraform/
+terraform.tfstate
+terraform.tfstate.backup
+# Ignore plan output files
+*.tfplan
+# Ignore sensitive files
+*.pem
+*.key
+# Ignore local environment settings
+.terraformrc
+terraform.rc
