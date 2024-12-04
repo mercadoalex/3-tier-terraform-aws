@@ -7,12 +7,12 @@ variable "key_pair_name" {
 variable "public_key_file" {
   description = "Path to the public key file"
   type        = string
-  default     = "path/to/your/public-key-file.pub"
+  default     = "keys/public-key-file.pub"
 }
 variable "private_key_file" {
   description = "Path to the private key file"
   type        = string
-  default     = "path/to/your/private-key-file.pem"
+  default     = "keys/private-key-file.pem"
 }
 #variable "file_name" {
 #  description = "Name of the key pair file"
