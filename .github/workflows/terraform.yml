@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}  # Reference the environment variable
+      aws-region: ${{ vars.AWS_DEFAULT_REGION }}  # Reference the environment variable
 
     steps:
       - name: 'Checkout GitHub Action'
