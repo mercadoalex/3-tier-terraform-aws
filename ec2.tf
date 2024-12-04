@@ -41,7 +41,6 @@ resource "local_file" "public_key" {
 resource "aws_key_pair" "tf_key" {
   depends_on = [null_resource.check_key_file]
   key_name   = var.key_pair_name
-  #public_key = local_file.public_key.content
   public_key = file(var.public_key_file)
   lifecycle {
     ignore_changes = [key_name]

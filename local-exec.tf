@@ -15,3 +15,14 @@ resource "null_resource" "check_key_file" {
     EOT
   }
 }
+
+resource "null_resource" "read_public_key" {
+  depends_on = [null_resource.check_key_file]
+  provisioner "local-exec" {
+    command = <<EOT
+      # Read the content of the public key file and store it in an environment variable
+      PUBLIC_KEY_CONTENT=$(cat ${var.public_key_file})
+      echo $PUBLIC_KEY_CONTENT
+    EOT
+  }
+}
