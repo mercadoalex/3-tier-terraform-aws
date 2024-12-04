@@ -24,7 +24,7 @@ resource "tls_private_key" "rsa-4096-alumno04" {
   rsa_bits  = 2048
 }
 /*
-resource "local_file" "tf_key"{
+resource "local_file" "private_key"{
   content =  tls_private_key.rsa-4096-alumno04.private_key_pem
   filename = var.private_key_file
 }
