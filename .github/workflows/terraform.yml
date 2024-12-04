@@ -13,10 +13,7 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-
-    env:
-      aws-region: ${{ vars.AWS_DEFAULT_REGION }}  # Reference the environment variable
-
+    environment: development  # Specify the environment
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v2
@@ -31,6 +28,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }} # Reference the environment variable
 
       - name: 'Terraform Init'
         run: terraform init
