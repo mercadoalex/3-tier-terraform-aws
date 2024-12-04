@@ -2,11 +2,13 @@
 variable "key_pair_name" {
   description = "The name of the key pair to use for the EC2 instances"
   type        = string
+  default     = "keypair_default"
 }
 
 variable "file_name" {
   description = "Name of the key pair file"
   type        = string
+  default     = "keyfile_default"
 }
 
 variable "instance_name_prefix" {
