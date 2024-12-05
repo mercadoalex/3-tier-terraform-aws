@@ -14,9 +14,8 @@ jobs:
     name: 'Terraform'  # Name of the job
     runs-on: ubuntu-latest  # Use the latest Ubuntu runner
     environment: development  # Specify the environment
-
     env:
-      AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}  # Reference the environment variable for AWS region
+      AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}  # Reference the environment variable for AWS region
 
     steps:
       - name: 'Checkout GitHub Action'
@@ -36,6 +35,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use the AWS access key ID from secrets
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use the AWS secret access key from secrets
           aws-region: ${{ env.AWS_DEFAULT_REGION }}  # Use the AWS region from the environment variable
+
+      - name: 'Set up SSH keys'
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > keys/la_maldita_llave.pem  # Create the private key file from the secret
+          echo "${{ secrets.PUBLIC_KEY }}" > keys/la_maldita_llave.pub  # Create the public key file from the secret
+          chmod 600 keys/llave.pem  # Set the appropriate permissions for the private key
+          chmod 600 keys/llave.pub  # Set the appropriate permissions for the public key
 
       - name: 'Terraform Init'
         run: terraform init  # Initialize Terraform

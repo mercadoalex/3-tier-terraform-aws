@@ -22,3 +22,9 @@ output "alb_security_group_id" {
   value       = aws_security_group.alb-security-group.id
   description = "The ID of the ALB security group"
 }
+
+##### Output the Public IP Address #####
+output "instance_public_ip" {
+  description = "The public IP address of the EC2 instance for the front"
+  value       = aws_instance.PublicWebTemplate.*.public_ip
+}
