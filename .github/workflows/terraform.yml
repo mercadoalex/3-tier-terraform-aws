@@ -1,9 +1,9 @@
 name: Terraform  # Name of the workflow
 
 on:
-  push:
-    branches:
-      - main  # Trigger the workflow on push to the main branch
+  #push:
+  #  branches:
+  #    - main  # Trigger the workflow on push to the main branch
   pull_request:
     branches:
       - main  # Trigger the workflow on pull request to the main branch

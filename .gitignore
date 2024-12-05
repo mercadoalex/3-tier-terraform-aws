@@ -6,3 +6,4 @@ terraform.tfstate.backup
 # Ignore local environment settings
 .terraformrc
 terraform.rc
+genera-llave.sh

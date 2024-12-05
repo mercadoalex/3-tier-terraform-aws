@@ -17,13 +17,13 @@ data "aws_ami" "amazon_linux_2" {
     values = ["amzn2-ami-hvm-*"]
   }
 }
-
+/*
 ##### RSA Key de 4096 bits #####
 resource "tls_private_key" "rsa-4096-alumno04" {
   algorithm = "RSA"
   rsa_bits  = 2048
 }
-/*
+
 resource "local_file" "private_key"{
   content =  tls_private_key.rsa-4096-alumno04.private_key_pem
   filename = var.private_key_file
@@ -37,10 +37,12 @@ resource "local_file" "public_key" {
 }
 */
 
-##### Key Pair #####
+##### Key Pair used to SSH into EC2 #####
 resource "aws_key_pair" "tf_key" {
-  depends_on = [null_resource.check_key_file]
-  key_name   = var.key_pair_name
+  //ensures that the key file is created before the key pair is created
+  depends_on = [null_resource.read_public_key] 
+  key_name   = var.key_pair_name #name of the key pair
+  #The file function reads the contents of the file and uses it as the public key material for the key pair.
   public_key = file(var.public_key_file)
   lifecycle {
     ignore_changes = [key_name]

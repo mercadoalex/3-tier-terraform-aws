@@ -1,15 +1,35 @@
 #!/bin/bash
+
+# Define the log file
+LOG_FILE="/var/log/user-data.log"
+
+# Function to log messages
+log() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> $LOG_FILE
+}
+
+# Start logging
+log "Starting user data script execution."
+
 # Update the package repository
-sudo yum update -y
+log "Updating package repository..."
+sudo yum update -y >> $LOG_FILE 2>&1
+log "Package repository updated."
 
 # Install Apache HTTP server
-sudo yum install -y httpd
+log "Installing Apache HTTP server..."
+sudo yum install -y httpd >> $LOG_FILE 2>&1
+log "Apache HTTP server installed."
 
 # Enable Apache to start on boot
-sudo systemctl enable httpd
+log "Enabling Apache to start on boot..."
+sudo systemctl enable httpd >> $LOG_FILE 2>&1
+log "Apache enabled to start on boot."
 
 # Start Apache service
-sudo systemctl start httpd
+log "Starting Apache service..."
+sudo systemctl start httpd >> $LOG_FILE 2>&1
+log "Apache service started."
 
 # Print a message indicating that Apache is installed and running
-echo "Servidor Apache instalado y corriendo"
+log "Apache server installed and running."

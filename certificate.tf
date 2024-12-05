@@ -1,23 +1,7 @@
-# Primary zone for pelucornio.link
-resource "aws_route53_zone" "primary" {
+# Reference the existing Route 53 hosted zone
+data "aws_route53_zone" "primary" {
   name = "pelucornio.link"
 }
-# Specify NS records for the primary zone
-/*
-resource "aws_route53_record" "primary_ns" {
-  zone_id = aws_route53_zone.primary.zone_id
-  name    = "pelucornio.link"
-  type    = "NS"
-  ttl     = 300
-  records = [
-    "ns-7.awsdns-00.com.",
-    "ns-2046.awsdns-63.co.uk.",
-    "ns-1093.awsdns-08.org.",
-    "ns-991.awsdns-59.net."
-  ]
-}
-*/
-
 
 # Create Route 53 hosted zone for añlumno04.pelucornio.link
 resource "aws_route53_zone" "alumno04" {
@@ -29,16 +13,16 @@ resource "aws_route53_zone" "alumno04" {
 
 # Set up NS records in pelucornio.link to point to alumno04.pelucornio.link zone's NS servers
 resource "aws_route53_record" "dev_ns" {
-  zone_id = aws_route53_zone.primary.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = "alumno04"
   type    = "NS"
   ttl     = 300
   records = aws_route53_zone.alumno04.name_servers
 }
 
-# Create a CNAME record in the primary domain to point to the subdomain
+# Create a CNAME record in the primary hosted zone to point to the subdomain
 resource "aws_route53_record" "primary_to_alumno_cname" {
-  zone_id = aws_route53_zone.primary.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = "www.pelucornio.link"
   type    = "CNAME"
   ttl     = 300
@@ -47,7 +31,7 @@ resource "aws_route53_record" "primary_to_alumno_cname" {
 
 # Create the ACM certificate with DNS validation for the root domain
 resource "aws_acm_certificate" "primary_hosted_zone" {
-  domain_name       = "www.pelucornio.link"
+  domain_name       = "*.pelucornio.link"
   validation_method = "DNS"
 
   tags = {
@@ -67,7 +51,7 @@ resource "aws_route53_record" "my_dns_record_primary" {
     }
   }
 
-  zone_id = aws_route53_zone.primary.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = each.value.name
   type    = each.value.type
   ttl     = 60
@@ -80,7 +64,7 @@ resource "aws_acm_certificate_validation" "primary_hosted_zone" {
   validation_record_fqdns = [for record in aws_route53_record.my_dns_record_primary : record.fqdn]
 
   timeouts {
-    create = "60m"  # Increased timeout to 60 minutes
+    create = "10m"  # Increased timeout to 60 minutes
   }
 }
 
@@ -95,7 +79,8 @@ resource "aws_acm_certificate" "vpn_server" {
     Environment = "dev"
   }
 }
-
+#OJO 
+#There is There is no need to create a separate certificate for the subdomain if the wildcard certificate is already in place.
 # Create DNS validation records in the subdomain's hosted zone
 resource "aws_route53_record" "my_dns_record_vpn_server" {
   for_each = {
@@ -119,7 +104,7 @@ resource "aws_acm_certificate_validation" "vpn_server" {
   validation_record_fqdns = [for record in aws_route53_record.my_dns_record_vpn_server : record.fqdn]
 
   timeouts {
-    create = "60m"  # Increased timeout to 60 minutes
+    create = "10m"  # Increased timeout to 60 minutes
   }
 }
 

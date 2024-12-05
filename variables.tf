@@ -2,28 +2,23 @@
 variable "key_pair_name" {
   description = "The name of the key pair to use for the EC2 instances"
   type        = string
-  default     = "keys/las_llaves"
+  default     = "keys/la_maldita_llave"
 }
 variable "public_key_file" {
   description = "Path to the public key file"
   type        = string
-  default     = "keys/public-key-file.pub"
+  default     = "keys/la_maldita_llave.pub"
 }
 variable "private_key_file" {
   description = "Path to the private key file"
   type        = string
-  default     = "keys/private-key-file.pem"
+  default     = "keys/la_maldita_llave.pem"
 }
-#variable "file_name" {
-#  description = "Name of the key pair file"
-#  type        = string
-#  default     = "keyfile_default"
-#}
 
 variable "instance_name_prefix" {
   description = "Prefix for the instance name"
   type        = string
-  default     = "webserverfrontend"
+  default     = "frontend"
 }
 variable "instance_count" {
   description = "Number of instances to create"
