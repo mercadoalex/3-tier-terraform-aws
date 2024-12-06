@@ -115,8 +115,8 @@ resource "aws_route53_record" "lb_alias" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.application-load-balancer.dns_name
-    zone_id                = aws_lb.application-load-balancer.zone_id
+    name                   = aws_lb.application-load-balancer2.dns_name
+    zone_id                = aws_lb.application-load-balancer2.zone_id
     evaluate_target_health = true
   }
 }
@@ -141,7 +141,7 @@ resource "aws_lb_listener" "https_listener_root" {
 */
 # Create a listener for the load balancer that uses the ACM certificate for the subdomain
 resource "aws_lb_listener" "https_listener_subdomain" {
-  load_balancer_arn = aws_lb.application-load-balancer.arn
+  load_balancer_arn = aws_lb.application-load-balancer2.arn
   port              = "443"
   protocol          = "HTTPS"
 

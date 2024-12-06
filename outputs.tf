@@ -1,7 +1,7 @@
 ######Load balancer #####
 output "lb_dns_name" {
   description = "DNS name of the load balancer"
-  value       = aws_lb.application-load-balancer.dns_name
+  value       = aws_lb.application-load-balancer2.dns_name
 } 
 # Output the FQDNs of the DNS validation records for the root domain
 output "dns_validation_fqdns_primary" {
@@ -28,3 +28,4 @@ output "instance_public_ip" {
   description = "The public IP address of the EC2 instance for the front"
   value       = aws_instance.PublicWebTemplate.*.public_ip
 }
+
