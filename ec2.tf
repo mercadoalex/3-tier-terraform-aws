@@ -57,7 +57,7 @@ resource "aws_instance" "PublicWebTemplate" {
   subnet_id              = aws_subnet.public-web-subnet-1.id
   vpc_security_group_ids = [aws_security_group.webserver-security-group.id]
   key_name               = var.key_pair_name
-  user_data              = file("install-apache.sh")
+  user_data              = file("web-setup.sh")
   associate_public_ip_address = true
 
   tags = {
