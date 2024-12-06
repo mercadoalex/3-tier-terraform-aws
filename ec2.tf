@@ -17,13 +17,13 @@ data "aws_ami" "amazon_linux_2" {
     values = ["amzn2-ami-hvm-*"]
   }
 }
-
+/*
 ##### RSA Key de 4096 bits #####
 resource "tls_private_key" "rsa-4096-alumno04" {
   algorithm = "RSA"
   rsa_bits  = 2048
 }
-/*
+
 resource "local_file" "private_key"{
   content =  tls_private_key.rsa-4096-alumno04.private_key_pem
   filename = var.private_key_file
@@ -37,10 +37,12 @@ resource "local_file" "public_key" {
 }
 */
 
-##### Key Pair #####
-resource "aws_key_pair" "tf_key2" {
-  depends_on = [null_resource.check_key_file]
-  key_name   = var.key_pair_name
+##### Key Pair used to SSH into EC2 #####
+resource "aws_key_pair" "tf_key" {
+  //ensures that the key file is created before the key pair is created
+  depends_on = [null_resource.read_public_key] 
+  key_name   = var.key_pair_name #name of the key pair
+  #The file function reads the contents of the file and uses it as the public key material for the key pair.
   public_key = file(var.public_key_file)
   lifecycle {
     ignore_changes = [key_name]
@@ -55,7 +57,7 @@ resource "aws_instance" "PublicWebTemplate" {
   subnet_id              = aws_subnet.public-web-subnet-1.id
   vpc_security_group_ids = [aws_security_group.webserver-security-group.id]
   key_name               = var.key_pair_name
-  user_data              = file("install-apache.sh")
+  user_data              = file("web-setup.sh")
   associate_public_ip_address = true
 
   tags = {

@@ -1,8 +1,9 @@
-resource "null_resource" "check_key_file" {
+resource "null_resource" "check_orcreate_key_file" {
   provisioner "local-exec" {
     command = <<EOT
       # Create the directory for the public key file if it doesn't exist
       echo "Creating directory for the public key file if it doesn't exist..."
+      # Create the directory path for the public key file
       mkdir -p $(dirname ${var.public_key_file})
 
       # Check if the public key file exists
@@ -24,7 +25,7 @@ resource "null_resource" "check_key_file" {
 }
 
 resource "null_resource" "read_public_key" {
-  depends_on = [null_resource.check_key_file]
+  depends_on = [null_resource.check_orcreate_key_file]
   provisioner "local-exec" {
     command = <<EOT
       # Read the content of the public key file and store it in an environment variable

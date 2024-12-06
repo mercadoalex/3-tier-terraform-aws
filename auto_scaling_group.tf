@@ -11,13 +11,13 @@ resource "aws_launch_template" "auto-scaling-group" {
     associate_public_ip_address = true
   }
   tags = {
-    Name = "${var.instance_name_prefix}-asg"
+    name = "${var.instance_name_prefix}-asg"
   }
 }
 
 resource "aws_autoscaling_group" "asg-1" {
   availability_zones = ["us-east-1a"]
-  desired_capacity   = 1
+  desired_capacity   = 2
   max_size           = 3
   min_size           = 1
 
