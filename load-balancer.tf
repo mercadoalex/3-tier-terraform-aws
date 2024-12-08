@@ -1,6 +1,6 @@
 #### Web app load balancer ######
 
-resource "aws_lb" "application-load-balancer2" {
+resource "aws_lb" "application-load-balancer" {
   name               = "web-external-load-balancer"
   internal           = false
   load_balancer_type = "application"
@@ -37,7 +37,7 @@ resource "aws_lb_target_group" "alb-target-group" {
 }
 
 resource "aws_lb_target_group_attachment" "web-attachment" {
-  count            = var.instance_count
+  count            = var.instance_count_autoscaling
   target_group_arn = aws_lb_target_group.alb-target-group.arn
   target_id        = aws_instance.PublicWebTemplate[count.index].id
   port             = 80
@@ -45,7 +45,7 @@ resource "aws_lb_target_group_attachment" "web-attachment" {
 
 ##create a listener on port 80 with redirect action 
 resource "aws_lb_listener" "alb_http_listener" {
-  load_balancer_arn = aws_lb.application-load-balancer2.arn
+  load_balancer_arn = aws_lb.application-load-balancer.arn
   port              = 80
   protocol          = "HTTP"
 

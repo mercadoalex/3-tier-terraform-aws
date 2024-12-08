@@ -64,7 +64,7 @@ resource "aws_acm_certificate_validation" "primary_hosted_zone" {
   validation_record_fqdns = [for record in aws_route53_record.my_dns_record_primary : record.fqdn]
 
   timeouts {
-    create = "10m"  # Increased timeout to 60 minutes
+    create = "10m" # Increased timeout to 60 minutes
   }
 }
 
@@ -104,7 +104,7 @@ resource "aws_acm_certificate_validation" "vpn_server" {
   validation_record_fqdns = [for record in aws_route53_record.my_dns_record_vpn_server : record.fqdn]
 
   timeouts {
-    create = "10m"  # Increased timeout to 60 minutes
+    create = "10m" # Increased timeout to 60 minutes
   }
 }
 
@@ -115,8 +115,8 @@ resource "aws_route53_record" "lb_alias" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.application-load-balancer2.dns_name
-    zone_id                = aws_lb.application-load-balancer2.zone_id
+    name                   = aws_lb.application-load-balancer.dns_name
+    zone_id                = aws_lb.application-load-balancer.zone_id
     evaluate_target_health = true
   }
 }
@@ -141,12 +141,12 @@ resource "aws_lb_listener" "https_listener_root" {
 */
 # Create a listener for the load balancer that uses the ACM certificate for the subdomain
 resource "aws_lb_listener" "https_listener_subdomain" {
-  load_balancer_arn = aws_lb.application-load-balancer2.arn
+  load_balancer_arn = aws_lb.application-load-balancer.arn
   port              = "443"
   protocol          = "HTTPS"
 
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = aws_acm_certificate.vpn_server.arn
+  ssl_policy      = "ELBSecurityPolicy-2016-08"
+  certificate_arn = aws_acm_certificate.vpn_server.arn
 
   default_action {
     type             = "forward"

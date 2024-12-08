@@ -6,3 +6,6 @@ terraform.tfstate.backup
 # Ignore local environment settings
 .terraformrc
 terraform.rc
+
+# Crash log files
+crash.log

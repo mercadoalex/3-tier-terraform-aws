@@ -1,3 +1,16 @@
+###### BLUE GREEN deployment #####
+variable "enable_blue_env" {
+  description = "Enable blue environment"
+  type        = bool
+  #OJO AQUI PARA HABILITAR EL DEPLOYMENT BLUE GREEN
+  default = true
+}
+variable "blue_instance_count" {
+  description = "Number of instances in blue environment"
+  type        = number
+  default     = 3
+}
+
 ###### Key pair #####
 variable "key_pair_name" {
   description = "The name of the key pair to use for the EC2 instances"
@@ -20,7 +33,12 @@ variable "instance_name_prefix" {
   type        = string
   default     = "frontend"
 }
-variable "instance_count" {
+variable "instance_count_bootstrap" {
+  description = "Number of instances to create at bo"
+  type        = number
+  default     = 1
+}
+variable "instance_count_autoscaling" {
   description = "Number of instances to create"
   type        = number
   default     = 1

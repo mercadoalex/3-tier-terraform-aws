@@ -1,8 +1,8 @@
 ######Load balancer #####
 output "lb_dns_name" {
   description = "DNS name of the load balancer"
-  value       = aws_lb.application-load-balancer2.dns_name
-} 
+  value       = aws_lb.application-load-balancer.dns_name
+}
 # Output the FQDNs of the DNS validation records for the root domain
 output "dns_validation_fqdns_primary" {
   value       = [for record in aws_route53_record.my_dns_record_primary : record.fqdn]
@@ -14,7 +14,7 @@ output "dns_validation_fqdns" {
   description = "The FQDNs of the DNS validation records for the ACM certificate."
 } */
 output "target_group_arn" {
-  value = aws_lb_target_group.alb-target-group.arn
+  value       = aws_lb_target_group.alb-target-group.arn
   description = "The ARN of the target group."
 }
 

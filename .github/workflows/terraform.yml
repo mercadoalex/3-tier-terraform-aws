@@ -40,9 +40,25 @@ jobs:
       - name: 'Terraform Init'
         run: terraform init  # Initialize Terraform
 
-      - name: 'Terraform Plan'
-        run: terraform plan -out=tfplan  # Create a Terraform plan and output it to a file
+      - name: 'Prompt for Terraform Destroy'
+        id: input1
+        run: |
+          echo "Do you want to proceed with terraform destroy? (yes/no)"
+          read answer
+          echo "::set-output name=answer::$answer"
+    
+      - name: 'Confirm Terraform Destroy'
+        if: steps.input1.outputs.answer == 'yes'
+        id: input2
+        run: |
+          echo "Are you sure you want to proceed with terraform destroy? (yes/no)"
+          read confirm
+          echo "::set-output name=confirm::$confirm"      
 
-      - name: 'Terraform Apply'
-        if: github.ref == 'refs/heads/main'  # Only apply the plan if the branch is main
-        run: terraform apply -auto-approve tfplan  # Apply the Terraform plan automatically
+      - name: 'Terraform Destroy'
+        if: steps.input2.outputs.confirm == 'yes'
+        run: terraform destroy -auto-approve  # Destroy Terraform-managed infrastructure
+
+      - name: 'Exit Message'
+        if: steps.input1.outputs.answer != 'no' || steps.input2.outputs.confirm != 'no'
+        run: echo "OK Bye"
