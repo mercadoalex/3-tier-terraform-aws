@@ -28,7 +28,7 @@ locals {
 variable "traffic_distribution" {
   description = "Levels of traffic distribution"
   type        = string
-  default     = "blue"  # Set a default value that matches a key in the traffic_dist_map
+  default     = "blue" # Set a default value that matches a key in the traffic_dist_map
 }
 variable "enable_green_env" {
   description = "Enable green environment"
