@@ -4,47 +4,49 @@ on:
   workflow_dispatch:
     inputs:
       proceed_with_destroy:
-        description: 'Do you want to proceed with terraform destroy? (yes/no)'
+        description: 'Do you want to proceed with terraform destroy?'
         required: true
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
         default: 'no'
       confirm_destroy:
-        description: 'Are you sure you want to proceed with terraform destroy? (yes/no)'
+        description: 'Are you sure you want to proceed with terraform destroy?'
         required: true
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
         default: 'no'
-jobs:
-  terraform:
-    name: 'Terraform'  # Name of the job
-    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
-    environment: development  # Specify the environment
 
-    env:
-      AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}  # Reference the environment variable for AWS region
+jobs:
+  terraform_apply:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    environment: development
 
     steps:
+      # Step to check out the repository code
       - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v2  # Check out the repository code
+        uses: actions/checkout@v2
 
-      - name: 'Setup Terraform'
-        uses: hashicorp/setup-terraform@v1  # Set up Terraform
-        with:
-          terraform_version: 1.0.0  # Specify the Terraform version
-
-      - name: 'Debug AWS Region'
-        run: echo "AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }}"  # Output the AWS region for debugging
-
-      - name: 'Configure AWS Credentials'
-        uses: aws-actions/configure-aws-credentials@v1  # Configure AWS credentials
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use the AWS access key ID from secrets
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use the AWS secret access key from secrets
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}  # Use the AWS region from the environment variable
-
+      # Step to initialize Terraform
       - name: 'Terraform Init'
-        run: terraform init  # Initialize Terraform
+        run: terraform init
 
-      - name: 'Terraform Apply - BLUE - GREEN TBD' 
-        run: terraform apply -auto-approve  # Apply Terraform-managed infrastructure
-        
+      # Step to apply Terraform-managed infrastructure
+      - name: 'Terraform Apply'
+        run: terraform apply -auto-approve
+
+  terraform_destroy:
+    name: 'Terraform Destroy'
+    runs-on: ubuntu-latest
+    environment: development
+    needs: terraform_apply  # This job depends on the successful completion of the terraform_apply job
+
+    steps:
+      # Step to check initial user input for proceeding with destroy
       - name: Check initial user input
         run: |
           if [ "${{ github.event.inputs.proceed_with_destroy }}" != "yes" ]; then
@@ -53,6 +55,7 @@ jobs:
           fi
           echo "User chose to proceed with terraform destroy."
 
+      # Step to confirm the user's decision to proceed with destroy
       - name: Confirm Terraform Destroy
         if: ${{ github.event.inputs.proceed_with_destroy }} == 'yes'
         run: |
@@ -62,10 +65,12 @@ jobs:
           fi
           echo "User confirmed to proceed with terraform destroy."
 
+      # Step to destroy Terraform-managed infrastructure if user confirms
       - name: 'Terraform Destroy'
         if: ${{ github.event.inputs.confirm_destroy }} == 'yes'
-        run: terraform destroy -auto-approve  # Destroy Terraform-managed infrastructure
+        run: terraform destroy -auto-approve
 
+      # Step to provide an exit message if the user does not proceed or confirm
       - name: 'Exit Message'
         if: ${{ github.event.inputs.proceed_with_destroy }} != 'yes' || ${{ github.event.inputs.confirm_destroy }} != 'yes'
         run: echo "OK Bye"
