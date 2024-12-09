@@ -10,7 +10,7 @@ on:
         options:
           - 'yes'
           - 'no'
-        default: 'yes'
+        default: 'no'
       confirm_destroy:
         description: 'Are you sure you want to proceed with terraform destroy?'
         required: true
@@ -18,7 +18,7 @@ on:
         options:
           - 'yes'
           - 'no'
-        default: 'yes'
+        default: 'no'
 
 jobs:
   terraform_apply:
@@ -30,6 +30,14 @@ jobs:
       # Step to check out the repository code
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v2
+
+      # Step to set up AWS credentials
+      - name: 'Configure AWS Credentials'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       # Step to initialize Terraform
       - name: 'Terraform Init'
@@ -45,6 +53,18 @@ jobs:
     needs: terraform_apply  # This job depends on the successful completion of the terraform_apply job
 
     steps:
+      # Step to check out the repository code
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
+
+      # Step to set up AWS credentials
+      - name: 'Configure AWS Credentials'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: your_region
+
       # Step to check initial user input for proceeding with destroy
       - name: Check initial user input
         run: |
