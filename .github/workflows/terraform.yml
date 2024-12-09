@@ -10,7 +10,7 @@ on:
         options:
           - 'yes'
           - 'no'
-        default: 'no'
+        default: 'yes'
       confirm_destroy:
         description: 'Are you sure you want to proceed with terraform destroy?'
         required: true
@@ -18,7 +18,7 @@ on:
         options:
           - 'yes'
           - 'no'
-        default: 'no'
+        default: 'yes'
 
 jobs:
   terraform_apply:
@@ -42,7 +42,6 @@ jobs:
   terraform_destroy:
     name: 'Terraform Destroy'
     runs-on: ubuntu-latest
-    environment: development
     needs: terraform_apply  # This job depends on the successful completion of the terraform_apply job
 
     steps:
@@ -57,13 +56,17 @@ jobs:
 
       # Step to confirm the user's decision to proceed with destroy
       - name: Confirm Terraform Destroy
-        if: ${{ github.event.inputs.proceed_with_destroy }} == 'yes'
         run: |
           if [ "${{ github.event.inputs.confirm_destroy }}" != "yes" ]; then
             echo "User chose not to confirm terraform destroy."
             exit 0
           fi
           echo "User confirmed to proceed with terraform destroy."
+
+      # Step to wait for 4 minutes if user confirms
+      - name: Wait for 4 minutes
+        if: ${{ github.event.inputs.confirm_destroy }} == 'yes'
+        run: sleep 240
 
       # Step to destroy Terraform-managed infrastructure if user confirms
       - name: 'Terraform Destroy'
