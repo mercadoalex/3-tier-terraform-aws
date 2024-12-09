@@ -10,7 +10,7 @@ resource "aws_launch_template" "auto-scaling-group-public" {
     security_groups             = [aws_security_group.webserver-security-group.id]
     associate_public_ip_address = true
   }
-  user_data = base64encode(templatefile("${path.root}/web-setup-test.sh", {
+  user_data = base64encode(templatefile("${path.root}/web-setup.sh", {
     #file_content = "version 1.0 - #${count.index}"
     file_content = "version 1.0 - auto-scaling"
   }))
@@ -59,7 +59,7 @@ resource "aws_launch_template" "auto-scaling-group-private" {
     security_groups             = [aws_security_group.ssh-aws-security-group.id]
     associate_public_ip_address = true
   }
-  user_data = base64encode(templatefile("${path.root}/web-setup-test.sh", {
+  user_data = base64encode(templatefile("${path.root}/web-setup.sh", {
     #file_content = "version 1.0 - #${count.index}"
     file_content = "version 1.0 - auto-scaling"
   }))

@@ -58,7 +58,7 @@ resource "aws_instance" "PublicWebTemplate" {
   vpc_security_group_ids = [aws_security_group.webserver-security-group.id]
   key_name               = var.key_pair_name
   #user_data                   = file("web-setup.sh")
-  user_data = base64encode(templatefile("${path.root}/web-setup-test.sh", {
+  user_data = base64encode(templatefile("${path.root}/web-setup.sh", {
     file_content = "version 1.0 - #${count.index}"
   }))
 
@@ -74,7 +74,7 @@ resource "aws_instance" "private-app-template" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.private-app-subnet-1.id
   vpc_security_group_ids = [aws_security_group.ssh-aws-security-group.id]
-  user_data              = file("web-setup-test.sh")
+  user_data              = file("web-setup.sh")
   tags = {
     Name = "app-asg"
   }

@@ -6,7 +6,7 @@ resource "aws_instance" "green" {
   subnet_id = element([aws_subnet.public-web-subnet-1.id, aws_subnet.public-web-subnet-2.id], count.index % 2)
   #vpc_security_group_ids = [module.app_security_group.security_group_id]
   vpc_security_group_ids = [aws_security_group.webserver-security-group.id]
-  user_data = templatefile("${path.root}/web-setup-test.sh", {
+  user_data = templatefile("${path.root}/web-setup.sh", {
     file_content = "version 1.1 - #${count.index}"
   })
 
