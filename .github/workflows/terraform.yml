@@ -3,6 +3,17 @@ name: Terraform Workflow
 on:
   workflow_dispatch:
     inputs:
+      deployment_type:
+        description: 'What kind of deployment do you want to apply?'
+        required: true
+        type: choice
+        options:
+          - 'blue'
+          - 'blue-90'
+          - 'split'
+          - 'green-90'
+          - 'green'
+        default: 'blue'
       proceed_with_destroy:
         description: 'Do you want to proceed with terraform destroy?'
         required: true
@@ -45,7 +56,8 @@ jobs:
 
       # Step to apply Terraform-managed infrastructure
       - name: 'Terraform Apply'
-        run: terraform apply -auto-approve
+        run: |
+          terraform apply -var="deployment_type=${{ github.event.inputs.deployment_type }}" -auto-approve
 
   terraform_destroy:
     name: 'Terraform Destroy'
@@ -63,7 +75,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: your_region
+          aws-region: us-east-1
 
       # Step to check initial user input for proceeding with destroy
       - name: Check initial user input
