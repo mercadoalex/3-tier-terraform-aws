@@ -1,14 +1,16 @@
-name: Terraform  # Name of the workflow
+name: Terraform Workflow
 
 on:
-  #push:
-  #  branches:
-  #    - main  # Trigger the workflow on push to the main branch
-  #pull_request:
-  #  branches:
-  #    - main  # Trigger the workflow on pull request to the main branch
-  workflow_dispatch:  # Allows manual triggering of the workflow
-
+  workflow_dispatch:
+    inputs:
+      proceed_with_destroy:
+        description: 'Do you want to proceed with terraform destroy? (yes/no)'
+        required: true
+        default: 'no'
+      confirm_destroy:
+        description: 'Are you sure you want to proceed with terraform destroy? (yes/no)'
+        required: true
+        default: 'no'
 jobs:
   terraform:
     name: 'Terraform'  # Name of the job
@@ -43,25 +45,27 @@ jobs:
       - name: 'Terraform Apply - BLUE - GREEN TBD' 
         run: terraform apply -auto-approve  # Apply Terraform-managed infrastructure
         
-      - name: 'Prompt for Terraform Destroy'
-        id: input1
+      - name: Check initial user input
         run: |
-          echo "Do you want to proceed with terraform destroy? (yes/no)"
-          read answer
-          echo "::set-output name=answer::$answer"
-    
-      - name: 'Confirm Terraform Destroy'
-        if: steps.input1.outputs.answer == 'yes'
-        id: input2
+          if [ "${{ github.event.inputs.proceed_with_destroy }}" != "yes" ]; then
+            echo "User chose not to proceed with terraform destroy."
+            exit 0
+          fi
+          echo "User chose to proceed with terraform destroy."
+
+      - name: Confirm Terraform Destroy
+        if: ${{ github.event.inputs.proceed_with_destroy }} == 'yes'
         run: |
-          echo "Are you sure you want to proceed with terraform destroy? (yes/no)"
-          read confirm
-          echo "::set-output name=confirm::$confirm"      
+          if [ "${{ github.event.inputs.confirm_destroy }}" != "yes" ]; then
+            echo "User chose not to confirm terraform destroy."
+            exit 0
+          fi
+          echo "User confirmed to proceed with terraform destroy."
 
       - name: 'Terraform Destroy'
-        if: steps.input2.outputs.confirm == 'yes'
+        if: ${{ github.event.inputs.confirm_destroy }} == 'yes'
         run: terraform destroy -auto-approve  # Destroy Terraform-managed infrastructure
 
       - name: 'Exit Message'
-        if: steps.input1.outputs.answer != 'yes' || steps.input2.outputs.confirm != 'yes'
+        if: ${{ github.event.inputs.proceed_with_destroy }} != 'yes' || ${{ github.event.inputs.confirm_destroy }} != 'yes'
         run: echo "OK Bye"
