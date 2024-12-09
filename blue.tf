@@ -71,6 +71,7 @@ resource "aws_lb_target_group_attachment" "blue_http" {
   target_id        = aws_instance.blue-web[count.index].id
   port             = 80
 }
+
 /*
 resource "aws_lb_target_group_attachment" "blue_https" {
   count            = length(aws_instance.blue-web)

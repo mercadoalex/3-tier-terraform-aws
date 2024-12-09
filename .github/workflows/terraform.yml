@@ -40,6 +40,9 @@ jobs:
       - name: 'Terraform Init'
         run: terraform init  # Initialize Terraform
 
+      - name: 'Terraform Apply - BLUE - GREEN TBD' 
+        run: terraform apply -auto-approve  # Apply Terraform-managed infrastructure
+        
       - name: 'Prompt for Terraform Destroy'
         id: input1
         run: |
@@ -60,5 +63,5 @@ jobs:
         run: terraform destroy -auto-approve  # Destroy Terraform-managed infrastructure
 
       - name: 'Exit Message'
-        if: steps.input1.outputs.answer != 'no' || steps.input2.outputs.confirm != 'no'
+        if: steps.input1.outputs.answer != 'yes' || steps.input2.outputs.confirm != 'yes'
         run: echo "OK Bye"
